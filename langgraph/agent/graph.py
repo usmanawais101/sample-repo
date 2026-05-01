@@ -129,7 +129,60 @@ class CodingAgentGraph:
         
         builder.add_edge("generate_response", END)
         
-        return builder.compile()
+        # Compile the graph
+        compiled_graph = builder.compile()
+        
+        # Generate and save Mermaid diagram
+        self._save_mermaid_diagram(compiled_graph)
+        
+        return compiled_graph
+    
+    def _save_mermaid_diagram(self, compiled_graph: StateGraph) -> None:
+        """Generate and save a Mermaid representation of the graph."""
+        import os
+        
+        try:
+            # Get the graph structure
+            graph_dict = compiled_graph.get_graph()
+            
+            # Build Mermaid syntax
+            mermaid_lines = ["graph TD"]
+            
+            # Add nodes
+            for node_name in graph_dict.nodes:
+                # Clean node name for Mermaid
+                clean_name = node_name.replace(" ", "_").replace("-", "_")
+                mermaid_lines.append(f"    {clean_name}[\"{node_name}\"]")
+            
+            # Add edges
+            for edge in graph_dict.edges:
+                source = edge[0].replace(" ", "_").replace("-", "_")
+                target = edge[1].replace(" ", "_").replace("-", "_")
+                mermaid_lines.append(f"    {source} --> {target}")
+            
+            # Add conditional edges if available
+            if hasattr(graph_dict, 'conditional_edges'):
+                for condition, edges in graph_dict.conditional_edges.items():
+                    source = condition.replace(" ", "_").replace("-", "_")
+                    for target, label in edges.items():
+                        target_clean = target.replace(" ", "_").replace("-", "_")
+                        mermaid_lines.append(f"    {source} -- {label} --> {target_clean}")
+            
+            mermaid_content = "\n".join(mermaid_lines)
+            
+            # Save to file in the context directory
+            mermaid_path = os.path.join(
+                self.context_manager.work_directory,
+                "agent_workflow.mmd"
+            )
+            
+            with open(mermaid_path, 'w') as f:
+                f.write(mermaid_content)
+            
+            print(f"Mermaid diagram saved to: {mermaid_path}")
+            
+        except Exception as e:
+            print(f"Warning: Could not generate Mermaid diagram: {e}")
     
     def run(
         self,
