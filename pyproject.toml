@@ -1,0 +1,11 @@
+[tool]
+name = "langgraph-agent"
+version = "0.1.0"
+description = "A LangGraph agent project."
+
+[project]
+dependencies = [
+    "langgraph",
+    "langchain",
+    "python-dotenv"
+]
