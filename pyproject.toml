@@ -1,11 +1,46 @@
-[tool]
+[tool.poetry]
 name = "langgraph-agent"
 version = "0.1.0"
-description = "A LangGraph agent project."
+description = "A LangGraph-based coding agent that generates, verifies, and executes Python code"
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+packages = [{include = "langgraph"}]
 
-[project]
-dependencies = [
-    "langgraph",
-    "langchain",
-    "python-dotenv"
-]
+[tool.poetry.dependencies]
+python = "^3.9"
+langgraph = "^0.2.0"
+langchain = "^0.3.0"
+langchain-openai = "^0.2.0"
+langchain-core = "^0.3.0"
+python-dotenv = "^1.0.0"
+pyyaml = "^6.0"
+pylint = {version = "^3.0", optional = true}
+mypy = {version = "^1.0", optional = true}
+
+[tool.poetry.extras]
+verification = ["pylint", "mypy"]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+pytest-cov = "^4.0"
+black = "^24.0"
+isort = "^5.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+target-version = ['py39', 'py310', 'py311']
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["langgraph/tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "-v --tb=short"

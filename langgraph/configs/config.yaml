@@ -1,0 +1,35 @@
+# Configuration for LangGraph Coding Agent
+
+llm:
+  # OpenAI API configuration
+  api_key_env: "OPENAI_API_KEY"
+  base_url_env: "OPENAI_BASE_URL"  # Optional, for compatible APIs
+  model: "gpt-4o"
+  temperature: 0.7
+  max_tokens: 4096
+
+agent:
+  # Maximum retry attempts for failed tasks
+  max_retries: 10
+  # Maximum iterations for graph execution
+  max_iterations: 50
+  # Code execution timeout in seconds
+  execution_timeout: 60
+
+session:
+  # SQLite database path for session storage
+  db_path: "sessions.db"
+
+context:
+  # Subdirectory names within work directory
+  code_dir: "generated_code"
+  artifacts_dir: "artifacts"
+  input_dir: "input"
+
+verification:
+  # Enable/disable verification steps
+  syntax_check: true
+  linting: true
+  type_checking: true
+  security_check: true
+  llm_review: true
